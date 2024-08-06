@@ -1,0 +1,87 @@
+.weather-app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  flex-direction: column;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.weather-app h1 {
+  font-size: 2em;
+}
+
+.weather-app p {
+  font-size: 1.2em;
+  margin: 5px 0;
+}
+
+.coords {
+  font-size: 20px;
+  border-radius: 5px;
+  border: 1px solid white;
+  margin-top: 10px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.group button{
+  border-radius: 5px;
+  border: 1px solid white;
+  padding: 5px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.form {
+  margin-top: 25px;
+}
+
+.form input{
+  border: 1px solid white;
+  border-radius: 5px;
+  height: 40px;
+  font-size: 20px;
+}
+
+.form button{
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.forecast {
+  flex-wrap: wrap;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.forecast div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  margin: 5px;
+  border: 1px solid white;
+  padding: 20px;
+}
+
+.weather-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.card-items {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}

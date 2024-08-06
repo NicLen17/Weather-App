@@ -119,7 +119,7 @@ function App() {
 
   //This function gets the 16 days forecast of the given location
   const getWeatherDetails = async (lat: number, lon: number) => {
-    const FORECAST_API_URL = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&lang=ES&appid=${API_KEY}`;
+    const FORECAST_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&lang=ES&appid=${API_KEY}`;
     try {
       const response = await axios.get(FORECAST_API_URL);
       const data = response.data;

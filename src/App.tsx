@@ -66,7 +66,7 @@ function App() {
     navigator.geolocation.getCurrentPosition(
       async position => {
         const { latitude, longitude } = position.coords;
-        const REVERSE_GEODECODING_URL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${API_KEY}`;
+        const REVERSE_GEODECODING_URL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${API_KEY}`;
         try {
           const response = await axios.get(REVERSE_GEODECODING_URL);
           const data = response.data;

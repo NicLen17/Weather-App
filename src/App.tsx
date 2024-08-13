@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import './App.css';
 import axios from 'axios';
+import "leaflet/dist/leaflet.css";
 
 interface WeatherData {
   latitude: number;
@@ -16,6 +18,50 @@ interface WeatherData {
   state: string;
   clouds: number;
   image: string;
+}
+
+interface HourlyWeatherData {
+  temperature_1: number;
+  maxTemp_1: number;
+  minTemp_1: number;
+  pop_1: number;
+  image_1: string;
+  date_1: string;
+
+  temperature_2: number;
+  maxTemp_2: number;
+  minTemp_2: number;
+  pop_2: number;
+  image_2: string;
+  date_2: string;
+
+  temperature_3: number;
+  maxTemp_3: number;
+  minTemp_3: number;
+  pop_3: number;
+  image_3: string;
+  date_3: string;
+
+  temperature_4: number;
+  maxTemp_4: number;
+  minTemp_4: number;
+  pop_4: number;
+  image_4: string;
+  date_4: string;
+
+  temperature_5: number;
+  maxTemp_5: number;
+  minTemp_5: number;
+  pop_5: number;
+  image_5: string;
+  date_5: string;
+
+  temperature_6: number;
+  maxTemp_6: number;
+  minTemp_6: number;
+  pop_6: number;
+  image_6: string;
+  date_6: string;
 }
 
 interface WeatherForecast {
@@ -56,6 +102,8 @@ function App() {
 
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null); //useState for actual weather data
   const [weatherForecast, setWeatherForecast] = useState<WeatherForecast | null>(null); //useState for forecast data
+  const [hourlyForecast, setHourlyForecast] = useState<HourlyWeatherData | null>(null); //useState for hourly weather data
+  const [pos, setPos] = useState([42, 4])
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -87,8 +135,8 @@ function App() {
 
   //This function get de weather data from a given city in the form or in the user location.
   const searchCoords = async (city: string) => {
+    const WEATHER_API = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&lang=ES&appid=${API_KEY}`;
     try {
-      const WEATHER_API = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&lang=ES&appid=${API_KEY}`;
       const response = await axios.get(WEATHER_API);
       const data = response.data;
       //console.log(data);
@@ -143,18 +191,85 @@ function App() {
         temperatureMin_4: Math.floor(data.list[24].main.temp_min),
         date_4: data.list[24].dt_txt,
         forecastImg_4: data.list[24].weather[0].icon,
-        
+
         temperatureMax_5: Math.floor(data.list[32].main.temp_max),
         temperatureMin_5: Math.floor(data.list[32].main.temp_min),
         date_5: data.list[32].dt_txt,
         forecastImg_5: data.list[32].weather[0].icon,
       });
+
+      getHourlyForecast(lat, lon)
       //console.log(data);
     } catch (error) {
       console.error('Error buscando el pronostico:', error);
       alert("Error en el pronostico")
     }
   };
+
+  const getHourlyForecast = async (lat: number, lon: number) => {
+    const HOURLY_FORECAST_API = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&lang=ES&appid=${API_KEY}`;
+    try {
+      const response = await axios.get(HOURLY_FORECAST_API);
+      const data = response.data;
+      //console.log(data);
+      setHourlyForecast({
+        temperature_1: Math.floor(data.list[0].main.temp),
+        maxTemp_1: Math.floor(data.list[0].main.temp_max),
+        minTemp_1: Math.floor(data.list[0].main.temp_min),
+        pop_1: data.list[0].pop,
+        image_1: data.list[0].weather[0].icon,
+        date_1: data.list[0].dt_txt.split(" ")[1].slice(0, 5),
+
+        temperature_2: Math.floor(data.list[1].main.temp),
+        maxTemp_2: Math.floor(data.list[1].main.temp_max),
+        minTemp_2: Math.floor(data.list[1].main.temp_min),
+        pop_2: data.list[1].pop,
+        image_2: data.list[1].weather[0].icon,
+        date_2: data.list[1].dt_txt.split(" ")[1].slice(0, 5),
+
+        temperature_3: Math.floor(data.list[2].main.temp),
+        maxTemp_3: Math.floor(data.list[2].main.temp_max),
+        minTemp_3: Math.floor(data.list[2].main.temp_min),
+        pop_3: data.list[2].pop,
+        image_3: data.list[2].weather[0].icon,
+        date_3: data.list[2].dt_txt.split(" ")[1].slice(0, 5),
+
+        temperature_4: Math.floor(data.list[3].main.temp),
+        maxTemp_4: Math.floor(data.list[3].main.temp_max),
+        minTemp_4: Math.floor(data.list[3].main.temp_min),
+        pop_4: data.list[3].pop,
+        image_4: data.list[3].weather[0].icon,
+        date_4: data.list[3].dt_txt.split(" ")[1].slice(0, 5),
+
+        temperature_5: Math.floor(data.list[4].main.temp),
+        maxTemp_5: Math.floor(data.list[4].main.temp_max),
+        minTemp_5: Math.floor(data.list[4].main.temp_min),
+        pop_5: data.list[4].pop,
+        image_5: data.list[4].weather[0].icon,
+        date_5: data.list[4].dt_txt.split(" ")[1].slice(0, 5),
+
+        temperature_6: Math.floor(data.list[5].main.temp),
+        maxTemp_6: Math.floor(data.list[5].main.temp_max),
+        minTemp_6: Math.floor(data.list[5].main.temp_min),
+        pop_6: data.list[5].pop,
+        image_6: data.list[5].weather[0].icon,
+        date_6: data.list[5].dt_txt.split(" ")[1].slice(0, 5)
+      });
+      //console.log(hourlyForecast);
+      if (inputRef.current) {
+        inputRef.current.value = '';
+      }
+    } catch (error) {
+      alert("Datos incorrectos h");;
+    }
+  }
+
+  const hourlyForecastIcon_1 = `https://openweathermap.org/img/wn/${hourlyForecast?.image_1}@2x.png`
+  const hourlyForecastIcon_2 = `https://openweathermap.org/img/wn/${hourlyForecast?.image_2}@2x.png`
+  const hourlyForecastIcon_3 = `https://openweathermap.org/img/wn/${hourlyForecast?.image_3}@2x.png`
+  const hourlyForecastIcon_4 = `https://openweathermap.org/img/wn/${hourlyForecast?.image_4}@2x.png`
+  const hourlyForecastIcon_5 = `https://openweathermap.org/img/wn/${hourlyForecast?.image_5}@2x.png`
+  const hourlyForecastIcon_6 = `https://openweathermap.org/img/wn/${hourlyForecast?.image_6}@2x.png`
 
   const weatherForecastIcon_1 = `https://openweathermap.org/img/wn/${weatherForecast?.forecastImg_1}@2x.png`
   const weatherForecastIcon_2 = `https://openweathermap.org/img/wn/${weatherForecast?.forecastImg_2}@2x.png`
@@ -171,8 +286,11 @@ function App() {
   useEffect(() => {
     if (weatherData) {
       getWeatherDetails(weatherData.latitude, weatherData.longitude);
+      setPos([weatherData?.latitude, weatherData?.longitude])
     }
   }, [weatherData]);
+
+  
 
   return (
     <div className="weather-app">
@@ -193,22 +311,89 @@ function App() {
         <button onClick={() => searchCoords("Tokyo")}>Tokyo, JP</button>
         <button onClick={() => searchCoords("Cancún")}>Cancún, MX</button>
       </div>
-          <div className='weather-card'>
-            <h2 style={{ textDecoration: "underline" }}>
-              Clima en {weatherData?.location}, {weatherData?.country} - {date}/{month}/{year} {formattedHours}:{formattedMinutes}hs.
-            </h2>
-            <img src={weatherIcon} alt="weather state" />
-            <div className='card-items'>
-              <p style={{ textTransform: 'capitalize' }}>Estado: {weatherData?.state}</p>
-              <p>Temperatura: {weatherData?.temperature}°C</p>
-              <p>Sensacion termica: {weatherData?.feelsTemperature}°C</p>
-              <p>Temperatura maxima: {weatherData?.maxTemp}°C</p>
-              <p>Temperatura minima: {weatherData?.minTemp}°C</p>
-              <p>Humedad: {weatherData?.humidity}%</p>
-              <p>Nubosidad: {weatherData?.clouds}%</p>
-              <p>Velocidad del viento: {weatherData?.windSpeed} m/s</p>
-            </div>
+      <div className='weather-card'>
+        <h2 style={{ textDecoration: "underline" }}>
+          Clima en {weatherData?.location}, {weatherData?.country} - {date}/{month}/{year} {formattedHours}:{formattedMinutes}hs.
+        </h2>
+        <img src={weatherIcon} alt="weather state" />
+        <div className='card-items'>
+          <p style={{ textTransform: 'capitalize' }}>Estado: {weatherData?.state}</p>
+          <p>Temperatura: {weatherData?.temperature}°C</p>
+          <p>Sensacion termica: {weatherData?.feelsTemperature}°C</p>
+          <p>Temperatura maxima: {weatherData?.maxTemp}°C</p>
+          <p>Temperatura minima: {weatherData?.minTemp}°C</p>
+          <p>Humedad: {weatherData?.humidity}%</p>
+          <p>Nubosidad: {weatherData?.clouds}%</p>
+          <p>Velocidad del viento: {weatherData?.windSpeed} m/s</p>
+        </div>
+        <MapContainer center={pos} zoom={1} scrollWheelZoom={false}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <Marker position={pos}>
+            <Popup>
+              {weatherData?.location}, {weatherData?.country}
+            </Popup>
+          </Marker>
+        </MapContainer>
+        <h2 style={{ textDecoration: "underline" }}>Estado del dia</h2>
+        <div className='hourly'>
+          <div className='hourly_card'>
+            <p>{hourlyForecast?.date_1}hs</p>
+            <img src={hourlyForecastIcon_1} alt="weather state" />
+            <p>Temperatura: {hourlyForecast?.temperature_1}°C</p>
+            <p>T.Max: {hourlyForecast?.maxTemp_1}°C</p>
+            <p>T.Min: {hourlyForecast?.minTemp_1}°C</p>
+            <p>% Lluvia: {hourlyForecast?.pop_1}%</p>
           </div>
+
+          <div className='hourly_card'>
+            <p>{hourlyForecast?.date_2}hs</p>
+            <img src={hourlyForecastIcon_2} alt="weather state" />
+            <p>Temperatura: {hourlyForecast?.temperature_2}°C</p>
+            <p>T.Max: {hourlyForecast?.maxTemp_2}°C</p>
+            <p>T.Min: {hourlyForecast?.minTemp_2}°C</p>
+            <p>% Lluvia: {hourlyForecast?.pop_2}%</p>
+          </div>
+
+          <div className='hourly_card'>
+            <p>{hourlyForecast?.date_3}hs</p>
+            <img src={hourlyForecastIcon_3} alt="weather state" />
+            <p>Temperatura: {hourlyForecast?.temperature_3}°C</p>
+            <p>T.Max: {hourlyForecast?.maxTemp_3}°C</p>
+            <p>T.Min: {hourlyForecast?.minTemp_3}°C</p>
+            <p>% Lluvia: {hourlyForecast?.pop_3}%</p>
+          </div>
+
+          <div className='hourly_card'>
+            <p>{hourlyForecast?.date_4}hs</p>
+            <img src={hourlyForecastIcon_4} alt="weather state" />
+            <p>Temperatura: {hourlyForecast?.temperature_4}°C</p>
+            <p>T.Max: {hourlyForecast?.maxTemp_4}°C</p>
+            <p>T.Min: {hourlyForecast?.minTemp_4}°C</p>
+            <p>% Lluvia: {hourlyForecast?.pop_4}%</p>
+          </div>
+
+          <div className='hourly_card'>
+            <p>{hourlyForecast?.date_5}hs</p>
+            <img src={hourlyForecastIcon_5} alt="weather state" />
+            <p>Temperatura: {hourlyForecast?.temperature_5}°C</p>
+            <p>T.Max: {hourlyForecast?.maxTemp_5}°C</p>
+            <p>T.Min: {hourlyForecast?.minTemp_5}°C</p>
+            <p>P.Lluvia: {hourlyForecast?.pop_5}%</p>
+          </div>
+
+          <div className='hourly_card'>
+            <p>{hourlyForecast?.date_6}hs</p>
+            <img src={hourlyForecastIcon_6} alt="weather state" />
+            <p>Temperatura: {hourlyForecast?.temperature_6}°C</p>
+            <p>T.Max: {hourlyForecast?.maxTemp_6}°C</p>
+            <p>T.Min: {hourlyForecast?.minTemp_6}°C</p>
+            <p>P.Lluvia: {hourlyForecast?.pop_6}%</p>
+          </div>
+        </div>
+      </div>
       <h2 style={{ textDecoration: "underline" }}>Pronostico de los siguientes 5 dias</h2>
       <div className='forecast'>
         <div>

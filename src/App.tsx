@@ -1,8 +1,8 @@
+import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import './App.css';
 import axios from 'axios';
-import "leaflet/dist/leaflet.css";
 
 interface WeatherData {
   latitude: number;
@@ -288,6 +288,14 @@ function App() {
     }
   }, [weatherData]);
 
+  function MyComponent() {
+    const map = useMap();
+    map.flyTo([weatherData?.latitude || 0, weatherData?.longitude || 0], map.getZoom());
+    return null;
+  }
+
+  const position: [number, number] = [weatherData?.latitude||0, weatherData?.longitude||0];
+
   return (
     <div className="weather-app">
       <div className='form'>
@@ -322,16 +330,17 @@ function App() {
           <p>Nubosidad: {weatherData?.clouds}%</p>
           <p>Velocidad del viento: {weatherData?.windSpeed} m/s</p>
         </div>
-        <MapContainer center={[weatherData?.latitude || 0, weatherData?.longitude || 0]} zoom={1} scrollWheelZoom={false}>
+        <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <Marker position={[weatherData?.latitude || 0, weatherData?.longitude || 0]}>
+          <Marker position={position}>
             <Popup>
               {weatherData?.location}, {weatherData?.country}
             </Popup>
           </Marker>
+          <MyComponent />
         </MapContainer>
         <h2 style={{ textDecoration: "underline" }}>Estado del dia</h2>
         <div className='hourly'>

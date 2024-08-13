@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import './App.css';
 import axios from 'axios';
 import "leaflet/dist/leaflet.css";
@@ -103,7 +103,6 @@ function App() {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null); //useState for actual weather data
   const [weatherForecast, setWeatherForecast] = useState<WeatherForecast | null>(null); //useState for forecast data
   const [hourlyForecast, setHourlyForecast] = useState<HourlyWeatherData | null>(null); //useState for hourly weather data
-  const [pos, setPos] = useState([42, 4])
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -286,7 +285,6 @@ function App() {
   useEffect(() => {
     if (weatherData) {
       getWeatherDetails(weatherData.latitude, weatherData.longitude);
-      setPos([weatherData?.latitude, weatherData?.longitude])
     }
   }, [weatherData]);
 

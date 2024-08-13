@@ -290,8 +290,6 @@ function App() {
     }
   }, [weatherData]);
 
-  
-
   return (
     <div className="weather-app">
       <div className='form'>
@@ -326,12 +324,12 @@ function App() {
           <p>Nubosidad: {weatherData?.clouds}%</p>
           <p>Velocidad del viento: {weatherData?.windSpeed} m/s</p>
         </div>
-        <MapContainer center={pos} zoom={1} scrollWheelZoom={false}>
+        <MapContainer center={[weatherData?.latitude || 0, weatherData?.longitude || 0]} zoom={1} scrollWheelZoom={false}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <Marker position={pos}>
+          <Marker position={[weatherData?.latitude || 0, weatherData?.longitude || 0]}>
             <Popup>
               {weatherData?.location}, {weatherData?.country}
             </Popup>
